@@ -35,10 +35,12 @@ class SendMessageCommand extends Command
         $xml = simplexml_load_string($response->body());
         $json = json_encode($xml);
         $events = json_decode($json,TRUE);
-        $message = "Region:$events[1]['reg1']\n
-            Depth:$events[1]['dep']\n
-            Time:$events[1]['date']\n
-            Location:https://www.google.com/maps/search/?api=1&query=$events[1]['lat'],$events[1]['long']\n";
+//        dd($events['item'][1]);
+        $lastEvent = $events['item'][1];
+        $message = "Region: " . $lastEvent['reg1'] . "\n" .
+            "Depth: " . $lastEvent['dep'] . "\n" .
+            "Time: " . $lastEvent['date'] . "\n" .
+            "Location: https://www.google.com/maps/search/?api=1&query=".$lastEvent['lat'].",".$lastEvent['long']."\n";
         Http::get("https://api.telegram.org/bot1138407370:AAGcehBntpDFAD8fOsRiOf-iLOV3oV0ovJI/sendMessage?chat_id=@IranianEarthquakes&text=" . $message);
 //        foreach ($events as $i => $event) {
 //            if ($i == 0) {
