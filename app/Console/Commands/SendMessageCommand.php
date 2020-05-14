@@ -41,7 +41,7 @@ class SendMessageCommand extends Command
             "Depth: " . $lastEvent['dep'] . "\n" .
             "Time: " . $lastEvent['date'] . "\n" .
             "Location: https://www.google.com/maps/search/?api=1&query=".$lastEvent['lat'].",".$lastEvent['long']."\n";
-        Http::get("https://api.telegram.org/bot1138407370:AAGcehBntpDFAD8fOsRiOf-iLOV3oV0ovJI/sendMessage?chat_id=@IranianEarthquakes&text=" . $message);
+//        Http::get("https://api.telegram.org/bot1138407370:AAGcehBntpDFAD8fOsRiOf-iLOV3oV0ovJI/sendMessage?chat_id=@IranianEarthquakes&text=" . $message);
 //        foreach ($events as $i => $event) {
 //            if ($i == 0) {
 //                continue;
