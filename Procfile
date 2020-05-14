@@ -1,1 +1,1 @@
-scheduler: php artisan schedule:run
+worker: php artisan schedule:run
