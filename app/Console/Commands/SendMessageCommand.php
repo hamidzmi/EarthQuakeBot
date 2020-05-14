@@ -31,6 +31,16 @@ class SendMessageCommand extends Command
      */
     public function handle()
     {
+        $response = Http::get("http://irsc.ut.ac.ir/events_list.xml");
+        if ($response->status() != 200) {
+            Log::critical("The response HTTP code of get data API is: " . $response->status());
+        }
+
+        Log::log($response->body());
+//        $xml = simplexml_load_string($response->body());
+//        $json = json_encode($xml);
+//        $array = json_decode($json,TRUE);
+
         $response = Http::get("https://api.telegram.org/bot1138407370:AAGcehBntpDFAD8fOsRiOf-iLOV3oV0ovJI/sendMessage?chat_id=@IranianEarthquakes&text=Salam!");
         Log::info("api response code: " . $response->status());
     }
