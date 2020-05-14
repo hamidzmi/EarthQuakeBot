@@ -40,8 +40,8 @@ class SendMessageCommand extends Command
 //        $xml = simplexml_load_string($response->body());
 //        $json = json_encode($xml);
 //        $array = json_decode($json,TRUE);
-
-        $response = Http::get("https://api.telegram.org/bot1138407370:AAGcehBntpDFAD8fOsRiOf-iLOV3oV0ovJI/sendMessage?chat_id=@IranianEarthquakes&text=Salam!");
+        $message = $response->body();
+        $response = Http::get("https://api.telegram.org/bot1138407370:AAGcehBntpDFAD8fOsRiOf-iLOV3oV0ovJI/sendMessage?chat_id=@IranianEarthquakes&text=" . $message);
         Log::info("api response code: " . $response->status());
     }
 }
