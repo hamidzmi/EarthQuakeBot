@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
 
 class SendMessageCommand extends Command
 {
@@ -30,6 +30,6 @@ class SendMessageCommand extends Command
      */
     public function handle()
     {
-        Log::info('Helloooooo from command!');
+        $response = Http::get("https://api.telegram.org/bot1138407370:AAGcehBntpDFAD8fOsRiOf-iLOV3oV0ovJI/sendMessage?chat_id=@IranianEarthquakes&text=Salam!");
     }
 }
