@@ -42,7 +42,7 @@ class SendMessageCommand extends Command
             if ($i == 0) {
                 continue;
             }
-            if (i > 10) {
+            if (i > 1) {
                 break;
 		    }
             $message = sprintf(
