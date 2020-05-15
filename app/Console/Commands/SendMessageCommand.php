@@ -44,21 +44,28 @@ class SendMessageCommand extends Command
             $lastEvent = $lastEvent->event_id;
         }
         foreach ($events['item'] as $i => $event) {
-            if ($i == 0 || $event["id"] <= $lastEvent) {
+            if ($i == 0 || $event["id"] < $lastEvent) {
                 continue;
 		    }
             $lat = explode(" ", $event["lat"])[0];
             $long = explode(" ", $event["long"])[0];
-            $message = sprintf(
-                "Region: %s%%0AMagnitude: %s%%0ADepth: %s%%0ATime: %s%%0ALocation: https://www.google.com/maps/place/%f,%f/@%f,%f,10z",
-                $event["reg1"],
-                $event["mag"],
-                $event["dep"],
-                Carbon::parse($event["date"])->setTimezone("Asia/Tehran")->format("Y-m-d H:i:s"),
+            $url = sprintf(
+                "https://cutt.ly/api/api.php?key=e347c6fafd1f1c1565e8d93b268d081620df6&short=https://www.google.com/maps/place/%f,%f/@%f,%f,10z",
                 $lat,
                 $long,
                 $lat,
                 $long
+            );
+            $json = file_get_contents($url);
+            $data = json_decode ($json, true);
+            $mapUrl = $data["url"]["shortLink"] ?? $url;
+            $message = sprintf(
+                "Region: %s%%0AMagnitude: %s%%0ADepth: %s%%0ATime: %s%%0ALocation: %s",
+                $event["reg1"],
+                $event["mag"],
+                $event["dep"],
+                Carbon::parse($event["date"])->setTimezone("Asia/Tehran")->format("Y-m-d H:i:s"),
+                $mapUrl
             );
             $response = Http::get("https://api.telegram.org/bot1138407370:AAGcehBntpDFAD8fOsRiOf-iLOV3oV0ovJI/sendMessage?chat_id=@IranianEarthquakes&text=" . $message);
             if ($response->status() == 200) {
