@@ -44,7 +44,7 @@ class SendMessageCommand extends Command
             $lastEvent = $lastEvent->event_id;
         }
         foreach ($events['item'] as $i => $event) {
-            if ($i == 0 || $event["id"] < $lastEvent) {
+            if ($i == 0 || $event["id"] <= $lastEvent) {
                 continue;
 		    }
             $lat = explode(" ", $event["lat"])[0];
