@@ -53,7 +53,7 @@ class SendMessageCommand extends Command
                 explode(" ", $event["lat"])[0],
                 explode(" ", $event["long"])[0]
             );
-            dd($message);
+//            dd($message);
             Http::get("https://api.telegram.org/bot1138407370:AAGcehBntpDFAD8fOsRiOf-iLOV3oV0ovJI/sendMessage?chat_id=@IranianEarthquakes&text=" . $message);
         }
     }
