@@ -41,16 +41,20 @@ class SendMessageCommand extends Command
             if ($i == 0) {
                 continue;
             }
-            if ($i > 1) {
+            if ($i > 10) {
                 break;
 		    }
+            $lat = explode(" ", $event["lat"])[0];
+            $long = explode(" ", $event["long"])[0];
             $message = sprintf(
-                "Region: %s%%0ADepth: %s%%0ATime: %s%%0ALocation: https://www.google.com/maps?q=%s,%s",
+                "Region: %s%%0ADepth: %s%%0ATime: %s%%0ALocation: https://www.google.com/maps/place/%f,%f/@%f,%f,10z",
                 $event["reg1"],
                 $event["dep"],
                 Carbon::parse($event["date"])->setTimezone("Asia/Tehran")->format("Y-m-d H:i:s"),
-                explode(" ", $event["lat"])[0],
-                explode(" ", $event["long"])[0]
+                $lat,
+                $long,
+                $lat,
+                $long
             );
             Http::get("https://api.telegram.org/bot1138407370:AAGcehBntpDFAD8fOsRiOf-iLOV3oV0ovJI/sendMessage?chat_id=@IranianEarthquakes&text=" . $message);
         }
