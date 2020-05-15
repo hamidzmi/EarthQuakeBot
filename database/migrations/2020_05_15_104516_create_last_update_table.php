@@ -15,6 +15,7 @@ class CreateLastUpdateTable extends Migration
     {
         Schema::create('last_update', function (Blueprint $table) {
             $table->id();
+            $table->unsignedInteger('event_id');
             $table->timestamps();
         });
     }

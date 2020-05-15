@@ -10,4 +10,5 @@ class LastUpdate extends Model
 {
     protected $table = "last_update";
     protected $guarded = [];
+    public $timestamps = true;
 }

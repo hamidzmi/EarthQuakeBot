@@ -4,6 +4,7 @@
 namespace App\Console\Commands;
 
 
+use App\LastUpdate;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
@@ -36,16 +37,14 @@ class SendMessageCommand extends Command
         $xml = simplexml_load_string($response->body());
         $json = json_encode($xml);
         $events = json_decode($json,TRUE);
-
-        $lastUpdate = app('db')->select("SELECT * FROM last_update");
-        if (!$lastUpdate) {
-            $lastUpdate = Carbon::now();
+        $lastEvent = LastUpdate::query()->where('id', 1)->first();
+        if (!$lastEvent) {
+            $lastEvent = $events['item'][1]["id"];
         } else {
-            $lastUpdate = Carbon::createFromTimestamp($lastUpdate[0]->updated_at);
+            $lastEvent = $lastEvent->event_id;
         }
-
         foreach ($events['item'] as $i => $event) {
-            if ($i == 0 || Carbon::parse($event["date"])->setTimezone("Asia/Tehran") < $lastUpdate) {
+            if ($i == 0 || $event["id"] < $lastEvent) {
                 continue;
 		    }
             $lat = explode(" ", $event["lat"])[0];
@@ -63,7 +62,10 @@ class SendMessageCommand extends Command
             );
             $response = Http::get("https://api.telegram.org/bot1138407370:AAGcehBntpDFAD8fOsRiOf-iLOV3oV0ovJI/sendMessage?chat_id=@IranianEarthquakes&text=" . $message);
             if ($response->status() == 200) {
-                app('db')->update("update last_update set updated_at = ?", [Carbon::parse($event["date"])]);
+                LastUpdate::query()->updateOrCreate(
+                    ['id' => 1],
+                    ['event_id' => $lastEvent]
+                );
             }
         }
     }
