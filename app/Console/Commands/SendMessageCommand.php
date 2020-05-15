@@ -47,8 +47,9 @@ class SendMessageCommand extends Command
             $lat = explode(" ", $event["lat"])[0];
             $long = explode(" ", $event["long"])[0];
             $message = sprintf(
-                "Region: %s%%0ADepth: %s%%0ATime: %s%%0ALocation: https://www.google.com/maps/place/%f,%f/@%f,%f,10z",
+                "Region: %s%%0AMagnitude: %s%%0ADepth: %s%%0ATime: %s%%0ALocation: https://www.google.com/maps/place/%f,%f/@%f,%f,10z",
                 $event["reg1"],
+                $event["mag"],
                 $event["dep"],
                 Carbon::parse($event["date"])->setTimezone("Asia/Tehran")->format("Y-m-d H:i:s"),
                 $lat,
