@@ -45,7 +45,7 @@ class SendMessageCommand extends Command
                 break;
 		    }
             $message = sprintf(
-                "Region: %s%%0ADepth: %s%%0ATime: %s%%0ALocation: https://www.google.com/maps?%%26q=%s,%s",
+                "Region: %s%%0ADepth: %s%%0ATime: %s%%0ALocation: https://www.google.com/maps?q=%s,%s",
                 $event["reg1"],
                 $event["dep"],
                 Carbon::parse($event["date"])->setTimezone("Asia/Tehran")->format("Y-m-d H:i:s"),
