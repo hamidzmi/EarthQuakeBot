@@ -4,6 +4,7 @@
 namespace App\Console\Commands;
 
 
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -45,14 +46,14 @@ class SendMessageCommand extends Command
                 break;
 		    }
             $message = sprintf(
-                "Region:%s%%0ADepth:%s%%0ATime:%s%%0ALocation: https://www.google.com/maps/search/?api=1&query=%f,%f",
+                "Region: %s%%0ADepth: %s%%0ATime: %s%%0ALocation: https://www.google.com/maps/search/?api=1%%26query=%f,%f",
                 $event["reg1"],
                 $event["dep"],
-                $event["date"],
+                Carbon::parse($event["date"])->setTimezone("Asia/Tehran")->format("Y-m-d H:i:s"),
                 explode(" ", $event["lat"])[0],
                 explode(" ", $event["long"])[0]
             );
-//            dd($message);
+            dd($message);
             Http::get("https://api.telegram.org/bot1138407370:AAGcehBntpDFAD8fOsRiOf-iLOV3oV0ovJI/sendMessage?chat_id=@IranianEarthquakes&text=" . $message);
         }
     }
