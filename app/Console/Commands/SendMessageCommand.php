@@ -60,11 +60,12 @@ class SendMessageCommand extends Command
             $data = json_decode ($json, true);
             $mapUrl = $data["url"]["shortLink"] ?? $url;
             $message = sprintf(
-                "Region: %s%%0AMagnitude: %s%%0ADepth: %s%%0ATime: %s%%0ALocation: %s",
+                "Region: %s%%0AMagnitude: %s%%0ADepth: %s km%%0ALocal Time: %s%%0AUTC Time: %s%%0ALocation: %s",
                 $event["reg1"],
                 $event["mag"],
                 $event["dep"],
                 Carbon::parse($event["date"])->setTimezone("Asia/Tehran")->format("Y-m-d H:i:s"),
+                Carbon::parse($event["date"])->format("Y-m-d H:i:s"),
                 $mapUrl
             );
             $response = Http::get("https://api.telegram.org/bot1138407370:AAGcehBntpDFAD8fOsRiOf-iLOV3oV0ovJI/sendMessage?chat_id=@IranianEarthquakes&text=" . $message);
