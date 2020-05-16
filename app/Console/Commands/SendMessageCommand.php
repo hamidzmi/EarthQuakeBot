@@ -32,7 +32,7 @@ class SendMessageCommand extends Command
      */
     public function handle()
     {
-        $response = Http::get("http://irsc.ut.ac.ir/events_list.xml");
+        $response = Http::get("http://irsc.ut.ac.ir/events_list_fa.xml");
 
         $xml = simplexml_load_string($response->body());
         $json = json_encode($xml);
@@ -41,7 +41,7 @@ class SendMessageCommand extends Command
         foreach ($events['item'] as $i => $event) {
             $lastEvent = LastUpdate::query()->where('id', 1)->first();
             $lastEventId = $lastEvent ? $lastEvent->event_id : $events['item'][1]["id"];
-            if ($i == 0 || $event["id"] <= $lastEventId) {
+            if ($i == 0 || $event["id"] < $lastEventId) {
                 continue;
 		    }
             $lat = explode(" ", $event["lat"])[0];
@@ -57,12 +57,11 @@ class SendMessageCommand extends Command
             $data = json_decode ($json, true);
             $mapUrl = $data["url"]["shortLink"] ?? $url;
             $message = sprintf(
-                "Region: %s%%0AMagnitude: %s%%0ADepth: %s km%%0ALocal Time: %s%%0AUTC Time: %s%%0ALocation: %s",
+                "گزارش مقدماتی زمین‌لرزه %%0A منطقه: %s%%0Aبزرگی: %s ریشتر%%0Aعمق: %s کیلومتر%%0Aزمان: %s%%0Aموقعیت مکانی: %s",
                 $event["reg1"],
                 $event["mag"],
                 $event["dep"],
-                Carbon::parse($event["date"])->setTimezone("Asia/Tehran")->format("Y-m-d H:i:s"),
-                Carbon::parse($event["date"])->format("Y-m-d H:i:s"),
+                $event["date"],
                 $mapUrl
             );
             $response = Http::get("https://api.telegram.org/bot1138407370:AAGcehBntpDFAD8fOsRiOf-iLOV3oV0ovJI/sendMessage?chat_id=@IranianEarthquakes&text=" . $message);
