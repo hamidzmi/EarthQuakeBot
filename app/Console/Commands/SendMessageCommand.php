@@ -70,9 +70,9 @@ class SendMessageCommand extends Command
             );
             $response = Http::get("https://api.telegram.org/bot1138407370:AAGcehBntpDFAD8fOsRiOf-iLOV3oV0ovJI/sendMessage?chat_id=@IranianEarthquakes&text=" . $message);
             if ($response->status() == 200) {
-                LastUpdate::query()->updateOrCreate(
+                app('db')->table('last_update')->updateOrInsert(
                     ['id' => 1],
-                    ['event_id' => $lastEvent]
+                    ['event_id' => (int)$event["id"]]
                 );
             }
         }
