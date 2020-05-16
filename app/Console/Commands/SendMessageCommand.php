@@ -41,7 +41,7 @@ class SendMessageCommand extends Command
         foreach ($events['item'] as $i => $event) {
             $lastEvent = LastUpdate::query()->where('id', 1)->first();
             $lastEventId = $lastEvent ? $lastEvent->event_id : $events['item'][1]["id"];
-            if ($i == 0 || $event["id"] < $lastEventId) {
+            if ($i == 0 || $event["id"] <= $lastEventId) {
                 continue;
 		    }
             $lat = explode(" ", $event["lat"])[0];
@@ -57,13 +57,7 @@ class SendMessageCommand extends Command
             $data = json_decode ($json, true);
             $mapUrl = $data["url"]["shortLink"] ?? $url;
             $message = sprintf(
-                __('message.title') . "%%0A" .
-                __('message.region') . ": %s%%0A" .
-                __('message.magnitude') . ": %s " . __('message.richter') . "%%0A" .
-                __('message.depth') . ": %s " . __('message.kilometer') . "%%0A" .
-                __('message.date') . ": %s%%0A" .
-                __('message.time') . ": %s%%0A" .
-                __('message.location') . ": %s",
+                __('message.title') . "%%0A%%0A" . __('message.region') . ": %s%%0A" . __('message.magnitude') . ": %s " . __('message.richter') . "%%0A" . __('message.depth') . ": %s " . __('message.kilometer') . "%%0A" . __('message.date') . ": %s%%0A" . __('message.time') . ": %s%%0A" . __('message.location') . ": %s",
                 $event["reg1"],
                 $event["mag"],
                 $event["dep"],
