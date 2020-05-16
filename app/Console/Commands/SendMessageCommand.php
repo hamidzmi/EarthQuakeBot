@@ -41,7 +41,7 @@ class SendMessageCommand extends Command
         foreach ($events['item'] as $i => $event) {
             $lastEvent = LastUpdate::query()->where('id', 1)->first();
             $lastEventId = $lastEvent ? $lastEvent->event_id : $events['item'][1]["id"];
-            if ($i == 0 || $event["id"] < $lastEventId) {
+            if ($i == 0 || $event["id"] <= $lastEventId) {
                 continue;
 		    }
             $lat = explode(" ", $event["lat"])[0];
@@ -57,13 +57,21 @@ class SendMessageCommand extends Command
             $data = json_decode ($json, true);
             $mapUrl = $data["url"]["shortLink"] ?? $url;
             $message = sprintf(
-                "گزارش مقدماتی زمین‌لرزه %%0A منطقه: %s%%0Aبزرگی: %s ریشتر%%0Aعمق: %s کیلومتر%%0Aزمان: %s%%0Aموقعیت مکانی: %s",
+                __('message.title') . "%%0A" .
+                __('message.region') . ": %s%%0A" .
+                __('message.magnitude') . ": %s " . __('message.richter') . "%%0A" .
+                __('message.depth') . ": %s " . __('message.kilometer') . "%%0A" .
+                __('message.date') . ": %s%%0A" .
+                __('message.time') . ": %s%%0A" .
+                __('message.location') . ": %s",
                 $event["reg1"],
                 $event["mag"],
                 $event["dep"],
-                $event["date"],
+                explode(' ', $event["date"])[0],
+                explode(' ', $event["date"])[1],
                 $mapUrl
             );
+            dd($message);
             $response = Http::get("https://api.telegram.org/bot1138407370:AAGcehBntpDFAD8fOsRiOf-iLOV3oV0ovJI/sendMessage?chat_id=@IranianEarthquakes&text=" . $message);
             if ($response->status() == 200) {
                 app('db')->table('last_update')->updateOrInsert(
