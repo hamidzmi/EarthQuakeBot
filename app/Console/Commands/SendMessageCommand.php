@@ -37,14 +37,11 @@ class SendMessageCommand extends Command
         $xml = simplexml_load_string($response->body());
         $json = json_encode($xml);
         $events = json_decode($json,TRUE);
-        $lastEvent = LastUpdate::query()->where('id', 1)->first();
-        if (!$lastEvent) {
-            $lastEvent = $events['item'][1]["id"];
-        } else {
-            $lastEvent = $lastEvent->event_id;
-        }
+
         foreach ($events['item'] as $i => $event) {
-            if ($i == 0 || $event["id"] <= $lastEvent) {
+            $lastEvent = LastUpdate::query()->where('id', 1)->first();
+            $lastEventId = $lastEvent ? $lastEvent->event_id : $events['item'][1]["id"];
+            if ($i == 0 || $event["id"] <= $lastEventId) {
                 continue;
 		    }
             $lat = explode(" ", $event["lat"])[0];
