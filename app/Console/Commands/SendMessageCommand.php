@@ -41,17 +41,17 @@ class SendMessageCommand extends Command
         foreach ($events['item'] as $i => $event) {
             $lastEvent = LastUpdate::query()->where('id', 1)->first();
             $lastEventId = $lastEvent ? $lastEvent->event_id : $events['item'][1]["id"];
-            if ($i == 0 || $event["id"] <= $lastEventId) {
+            if ($i == 0 || $event["id"] < $lastEventId) {
                 continue;
 		    }
             $lat = explode(" ", $event["lat"])[0];
             $long = explode(" ", $event["long"])[0];
             $url = sprintf(
                 "https://cutt.ly/api/api.php?key=e347c6fafd1f1c1565e8d93b268d081620df6&short=https://www.google.com/maps/place/%f,%f/@%f,%f,10z",
-                $lat,
-                $long,
-                $lat,
-                $long
+                $this->convert($lat),
+                $this->convert($long),
+                $this->convert($lat),
+                $this->convert($long)
             );
             $json = file_get_contents($url);
             $data = json_decode ($json, true);
@@ -79,5 +79,16 @@ class SendMessageCommand extends Command
                 );
             }
         }
+    }
+
+    function convert($string) {
+        $persian = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+        $arabic = ['٩', '٨', '٧', '٦', '٥', '٤', '٣', '٢', '١','٠'];
+
+        $num = range(0, 9);
+        $convertedPersianNums = str_replace($persian, $num, $string);
+        $englishNumbersOnly = str_replace($arabic, $num, $convertedPersianNums);
+
+        return $englishNumbersOnly;
     }
 }
